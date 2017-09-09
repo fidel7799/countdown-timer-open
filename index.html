@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>OpenBot | Muy pronto</title>
+    <link rel="stylesheet" type="text/css" href="css/mainlanding.css">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img src="img/logo.svg" class="img-responsive center-block">
+
+      </div>
+      <h1 id="muypronto">¡MUY PRONTO!</h1>
+      <div class="col-md-3 col-xs-2 col-sm-2 col-lg-2">
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-xs-8 col-sm-8 col-lg-8" id="recuadro">
+          <p style="color: white">Siente el poder de la tecnología<br> y la automatización adaptada al mercado</p>
+          <div id="clockdiv">
+            <div>
+              <div class="smalltext">Días</div>
+              <span class="days"></span>
+            </div>
+            <div>
+              <div class="smalltext">Horas</div>
+              <span class="hours"></span>
+            </div>
+            <div>
+              <div class="smalltext">Minutos</div>
+              <span class="minutes"></span>
+            </div>
+            <div>
+              <div class="smalltext">Segs</div>
+              <span class="seconds"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-xs-2 col-sm-2 col-lg-2">
+    </div>
+
+    </div>
+
+    <script>
+
+    function getTimeRemaining(endtime) {
+    var t = Date.parse(endtime) - Date.parse(new Date());
+    var seconds = Math.floor((t / 1000) % 60);
+    var minutes = Math.floor((t / 1000 / 60) % 60);
+    var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+    }
+
+    function initializeClock(id, endtime) {
+    var clock = document.getElementById(id);
+    var daysSpan = clock.querySelector('.days');
+    var hoursSpan = clock.querySelector('.hours');
+    var minutesSpan = clock.querySelector('.minutes');
+    var secondsSpan = clock.querySelector('.seconds');
+
+    function updateClock() {
+      var t = getTimeRemaining(endtime);
+
+      daysSpan.innerHTML = t.days;
+      hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+      minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+      secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+      if (t.total <= 0) {
+        clearInterval(timeinterval);
+      }
+    }
+
+    updateClock();
+    var timeinterval = setInterval(updateClock, 1000);
+    }
+
+    $.get( "https://api.fenixpremium.com/v1/countdown", function( data ) {
+      var timeLeft  = data.left_time;
+      var deadline = new Date(Date.parse(new Date()) + timeLeft * 1000);
+      initializeClock('clockdiv', deadline);
+    });
+    </script>
+
+  </body>
+</html>
